@@ -1,2 +1,9 @@
-run_model.py
-create_cookie.py
+*
+
+!create_opencor_service.sh
+!customize_cookie.py
+!get_num_inputs.py
+!create_cookie.py
+!run_model.py
+!.gitignore
+
