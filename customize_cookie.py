@@ -139,8 +139,6 @@ RUN tar -xvzf OpenCOR-2019-06-11-Linux.tar.gz && \\
     rm OpenCOR-2019-06-11-Linux.tar.gz
 
 """
-# text to add environment variables for project name and model file
-envtext = "ENV PROJECT_NAME=\"" + project_name + "\"\nENV MODEL_FILE=\"" + model_file + "\"\n"
 
 # make the changes in the Docker file
 with Docker_file.open("r") as d_file:
@@ -148,8 +146,9 @@ with Docker_file.open("r") as d_file:
 
 with Docker_fileout.open("w") as dout_file:
     for line in buf:
-        if line == "#     docker run demo:prod\n":
-            line = line + addtext + envtext
+        
+        if line .__contains__("#     docker run"):
+            line = line + addtext
         dummyvar = dout_file.write(line)
 
 
