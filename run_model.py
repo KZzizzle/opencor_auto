@@ -6,25 +6,30 @@ import csv
 from pathlib import Path
 
 
-# modelname = "/home/zhuang/Downloads/guyton_antidiuretic_hormone_2008.cellml"
-# input_folder = "demo"
-modelname = str(sys.argv[1])
-input_folder = str(sys.argv[2])
+# modelpath = "/home/zhuang/Downloads/guyton_antidiuretic_hormone_2008.cellml"
+# inputjson= "demo"
+inputjson= str(sys.argv[1])
+modelpath = str(sys.argv[2])
+mapfile = str(sys.argv[3])
 
 # parse user inputs from json file
-inputpath = Path(input_folder+"/inputs.json")
-print(inputpath)
-with inputpath.open("r") as input:
-    inputdata = json.load(input)
+inputpath = Path(inputjson)
+with inputpath.open("r") as fp:
+    inputdata_unmapped = json.load(fp)
 
+mapfilepath = Path(mapfile)
+with mapfilepath.open("r") as fp:
+    inputkeymap = json.load(fp)
+inputdata = {newkey: inputdata_unmapped[oldkey] for (oldkey, newkey) in inputkeymap.items()}
+print(inputdata)
 
 starttime = float(inputdata["starttime"])
 endtime = float(inputdata["endtime"])
 timeincr = float(inputdata["timeincr"])
 
 # some basic verification
-if modelname.endswith('cellml') or modelname.endswith('sedml'):
-    model = OpenCOR.openSimulation(modelname)
+if modelpath.endswith('cellml') or modelpath.endswith('sedml'):
+    model = OpenCOR.openSimulation(modelpath)
 else:
     sys.exit('Invalid file type: only .cellml and .sedml accepted')
 

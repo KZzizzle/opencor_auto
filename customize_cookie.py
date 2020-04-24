@@ -1,4 +1,3 @@
-import pickle
 import yaml
 import sys
 import json
@@ -14,8 +13,8 @@ model_file = str(sys.argv[1])
 #=======================================================================
 
 # read constants and state fields for the particular model 
-with open('model_inputs.txt', 'rb') as handle:
-    model_inputs = pickle.loads(handle.read())
+with open('model_inputs.json', 'r') as handle:
+    model_inputs = json.loads(handle.read())
 
 metadata_file = Path(project_name+"/metadata/metadata_copy.yml")
 
@@ -24,14 +23,19 @@ with metadata_file.open("r") as fp:
 
 
 # replace default input fields in metadata.yml with model constants and states
+input_keymap = {}
 metadata_dict["inputs"] = {}
+
+input_keymap["starttime"]="starttime"
+input_keymap["endtime"]="endtime"
+input_keymap["timeincr"]="timeincr"
 
 metadata_dict["inputs"].update({
     "starttime": {
         "displayOrder": 1,
         "label": "simulation start time",
         "description": "starting time of simulation (s)",
-        "type": "float",
+        "type": "number",
         "defaultValue":0
         }
         })
@@ -40,7 +44,7 @@ metadata_dict["inputs"].update({
         "displayOrder":2,
         "label":"simulation ending time",
         "description": "ending time of simulation (s)",
-        "type": "float",
+        "type": "number",
         "defaultValue": 1000
         }
         })
@@ -49,7 +53,7 @@ metadata_dict["inputs"].update({
         "displayOrder":3,
         "label":"simulation time increment",
         "description": "time step for running simulation (s)",
-        "type": "float",
+        "type": "number",
         "defaultValue": 1
         }
         })
@@ -57,11 +61,14 @@ metadata_dict["inputs"].update({
 
 for key in model_inputs:    
     # print(key)
-    metadata_dict["inputs"][key] = {
-        "displayOrder": list(model_inputs.keys()).index(key)+4,
+    number = list(model_inputs.keys()).index(key)
+    keyname = "input_"+ str(number)
+    input_keymap[keyname] = key
+    metadata_dict["inputs"][keyname] = {
+        "displayOrder": number+4,
         "label":key.split("/")[-1],
         "description": key,
-        "type": "float",
+        "type": "number",
         "defaultValue": model_inputs[key]
     }
 
@@ -79,9 +86,15 @@ metadata_dict["outputs"].update({
             })
 
 # write to metadata file
-metadata_file_copy = Path(project_name+"/metadata/metadata.yml")
-with metadata_file_copy.open("w") as fp:
+metadata_file_edited = Path(project_name+"/metadata/metadata.yml")
+with metadata_file_edited.open("w") as fp:
     yaml.safe_dump(metadata_dict, fp, default_flow_style=False)
+
+# write mapping between metadata input keys and openCOR param keys
+
+map_file = Path(project_name+"/src/" + project_name + "/input_keymap.json")
+with map_file.open("w") as fp:
+    json.dump(input_keymap, fp, indent=4)
 
 #=======================================================================
 # write validation input file for constants and states
@@ -150,6 +163,7 @@ with Docker_fileout.open("w") as dout_file:
         if line .__contains__("RUN adduser "):
             line = line + "\nCOPY --chown=scu:scu ./src/"+ project_name + "/run_model.py /home/" + project_name + "/\n"
             line = line + "COPY --chown=scu:scu ./src/" + project_name + "/" + model_file + " /home/" + project_name + "/\n"
+            line = line + "COPY --chown=scu:scu ./src/" + project_name + "/input_keymap.json /home/" + project_name + "/\n"
         placeholder = dout_file.write(line)
 
 #=======================================================================
@@ -159,8 +173,9 @@ with Docker_fileout.open("w") as dout_file:
 execute_file = Path(project_name+"/service.cli/execute_copy.sh")
 execute_fileout = Path(project_name+"/service.cli/execute.sh")
 
-executetext = ("\n/home/opencor/OpenCOR-2019-06-11-Linux/bin/OpenCOR -c PythonRunScript::script run_model.py "
-+ "${INPUT_FOLDER}/inputs.json /home/" + project_name + "/" + model_file 
+executetext = ("\n/home/opencor/OpenCOR-2019-06-11-Linux/bin/OpenCOR -c PythonRunScript::script /home/" 
++ project_name + "/run_model.py ${INPUT_FOLDER}/inputs.json /home/" 
++ project_name + "/" + model_file + " /home/" + project_name + "/input_keymap.json"
 + "\n\ncp outputs.csv ${OUTPUT_FOLDER}/outputs.csv\n\nenv | grep INPUT")
 
 

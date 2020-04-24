@@ -2,7 +2,7 @@
 
 # first argument is the cellML or sedML path, second argument is the name of the project. 
 
-# /home/opencor/OpenCOR-2019-06-11-Linux/bin/OpenCOR -c PythonRunScript::script get_num_inputs.py $1 $2
+/home/opencor/OpenCOR-2019-06-11-Linux/bin/OpenCOR -c PythonRunScript::script get_num_inputs.py $1 $2
 
 # python3 -m venv .venv
 # source .venv/bin/activate
@@ -16,19 +16,25 @@
 
 pushd $2
 make .venv
+make devenv
 source .venv/bin/activate
 # make build
 popd
 
-cp $1 "$2/src/$2/"
-cp run_model.py "$2/src/$2/"
+# cp $1 "$2/src/$2/"
+# cp run_model.py "$2/src/$2/"
 python3 customize_cookie.py "${1##*/}" $2
+chmod +x "$2/service.cli/execute.sh"
 pushd $2
 make build
 make up
+make tests
+# cp ".tmp/output/outputs.csv" "validation/output/"
+# rm "validation/output/outputs.json"
 popd
 
-# /home/opencor/OpenCOR-2019-06-11-Linux/bin/OpenCOR -c PythonRunScript::script run_model.py $1 $2
+deactivate
+# /home/opencor/OpenCOR-2019-06-11-Linux/bin/OpenCOR -c PythonRunScript::script run_model.py demo/validation/input/inputs.json demo/src/demo/guyton_antidiuretic_hormone_2008.cellml demo/src/demo/input_keymap.json
 
 
 

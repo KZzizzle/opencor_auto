@@ -1,6 +1,7 @@
 import OpenCOR
 import sys
 import pickle
+import json
 
 # modelurl = ('LoeweLutzFabbriSeveri.cellml')
 # modelurl = input("Enter the model url: ")
@@ -21,7 +22,7 @@ def main(modelpath, servicename):
         c = model.data().constants()
         s = model.data().states()
         num_inputs = len(s)+len(c)
-        print(num_inputs)
+
         if num_inputs<1:
             print('this model has no editable input values')
         else:
@@ -37,8 +38,8 @@ def main(modelpath, servicename):
                 s_copy[entry]=s[entry]
             model_inputs.update(s_copy)    
 
-            with open('model_inputs.txt', 'wb') as f:
-                pickle.dump(model_inputs, f)
+            with open('model_inputs.json', 'w') as f:
+                json.dump(model_inputs, f, indent=4)
 
     except:
         print('Error during model loading')
