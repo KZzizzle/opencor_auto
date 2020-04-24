@@ -91,7 +91,6 @@ with metadata_file_edited.open("w") as fp:
     yaml.safe_dump(metadata_dict, fp, default_flow_style=False)
 
 # write mapping between metadata input keys and openCOR param keys
-
 map_file = Path(project_name+"/src/" + project_name + "/input_keymap.json")
 with map_file.open("w") as fp:
     json.dump(input_keymap, fp, indent=4)
@@ -192,8 +191,3 @@ with execute_fileout.open("w") as eout_file:
             dummyvar = eout_file.write(line)
 
 
-# infile = open('input.txt','r').readlines()
-# with open('output.txt','w') as outfile:
-#     for index,line in enumerate(infile):
-#         if index != 7:
-#             outfile.write(line)

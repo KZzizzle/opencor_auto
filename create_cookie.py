@@ -1,5 +1,6 @@
 
 from cookiecutter.main import cookiecutter
+from shutil import copyfile
 import sys
 
 
@@ -10,7 +11,7 @@ def main(servicename):
     cookiecutter('https://github.com/ITISFoundation/cookiecutter-osparc-service', extra_context={
         'docker_base':"ubuntu:18.04",
         'number_of_inputs': num_inputs, 
-        'affiliation': 'ITIS Foundation'
+        'affiliation': 'ITIS Foundation',
         'project_name': servicename,
         'author_name': "Katie Zhuang",
         'author_email': "zhuang@itis.swiss",
@@ -18,6 +19,11 @@ def main(servicename):
         'number_of_outputs': 1,
         'git_username': "KZzizzle"
     })
+
+    copyfile(servicename + "/docker/ubuntu/Dockerfile", servicename + "/docker/ubuntu/Dockerfile_copy")
+    copyfile(servicename + "/service.cli/execute.sh", servicename + "/service.cli/execute_copy.sh")
+    copyfile(servicename + "/metadata/metadata.yml", servicename + "/metadata/metadata_copy.yml")
+
     return 0
 
 def usage():

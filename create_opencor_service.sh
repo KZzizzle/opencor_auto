@@ -4,37 +4,33 @@
 
 /home/opencor/OpenCOR-2019-06-11-Linux/bin/OpenCOR -c PythonRunScript::script get_num_inputs.py $1 $2
 
-# python3 -m venv .venv
-# source .venv/bin/activate
-# pip install cookiecutter
-# pip install PyYAML
-
-# python3 create_cookie.py $2
-# cp "$2/docker/ubuntu/Dockerfile" "$2/docker/ubuntu/Dockerfile_copy"
-# cp "$2/service.cli/execute.sh" "$2/service.cli/execute_copy.sh"
-# cp "$2/metadata/metadata.yml" "$2/metadata/metadata_copy.yml"
-
-pushd $2
-make .venv
-make devenv
+python3 -m venv .venv
 source .venv/bin/activate
-# make build
-popd
+pip install cookiecutter
+pip install PyYAML
 
-# cp $1 "$2/src/$2/"
-# cp run_model.py "$2/src/$2/"
+python3 create_cookie.py $2
+
+# in the new directory, make the virtual environment and build the cookie
+make -C $2 .venv
+make -C $2 devenv
+source "$2/.venv/bin/activate"
+make -C $2 build
+
+cp $1 "$2/src/$2/"
+cp run_model.py "$2/src/$2/"
 python3 customize_cookie.py "${1##*/}" $2
 chmod +x "$2/service.cli/execute.sh"
-pushd $2
-make build
-make up
-make tests
-# cp ".tmp/output/outputs.csv" "validation/output/"
-# rm "validation/output/outputs.json"
-popd
+
+make -C $2 build
+make -C $2 up
+cp "$2/.tmp/output/outputs.csv" "$2/validation/output/"
+rm "$2/validation/output/outputs.json"
+
+make -C $2 tests
 
 deactivate
-# /home/opencor/OpenCOR-2019-06-11-Linux/bin/OpenCOR -c PythonRunScript::script run_model.py demo/validation/input/inputs.json demo/src/demo/guyton_antidiuretic_hormone_2008.cellml demo/src/demo/input_keymap.json
+# # /home/opencor/OpenCOR-2019-06-11-Linux/bin/OpenCOR -c PythonRunScript::script run_model.py demo/validation/input/inputs.json demo/src/demo/guyton_antidiuretic_hormone_2008.cellml demo/src/demo/input_keymap.json
 
 
 
