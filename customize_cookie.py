@@ -146,7 +146,6 @@ with Docker_file.open("r") as d_file:
 
 with Docker_fileout.open("w") as dout_file:
     for line in buf:
-        
         if line .__contains__("#     docker run"):
             line = line + addtext
         dummyvar = dout_file.write(line)

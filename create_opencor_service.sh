@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -o pipefail
 # To use: call the script with first argument being the cellML or sedML path, second argument being the name of the project. 
 # Example: . create_opencor_service.sh /home/zhuang/Downloads/guyton_antidiuretic_hormone_2008.cellml demo
 
