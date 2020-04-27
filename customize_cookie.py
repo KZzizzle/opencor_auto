@@ -209,5 +209,5 @@ with readme_file.open("w") as rout_file:
             line = version_text
             lastline = index
         if index <= lastline:
-            dummyvar = dout_file.write(line)
+            dummyvar = rout_file.write(line)
 

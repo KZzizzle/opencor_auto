@@ -27,7 +27,7 @@ cp run_model.py "$2/src/$2/"
 python3 customize_cookie.py "${1##*/}" $2
 chmod +x "$2/service.cli/execute.sh"
 
-# build and run container, copy validation output to validation folder
+build and run container, copy validation output to validation folder
 make -C $2 build
 make -C $2 up
 cp "$2/.tmp/output/outputs.csv" "$2/validation/output/"
@@ -56,6 +56,7 @@ select yn in "yes" "no"; do
     case $yn in
         yes )
         source "$2/.venv/bin/activate"
+        pip install bump2version
         make -C $2 version-service-major
         make -C $2 build
         make -C $2 up
@@ -69,8 +70,8 @@ select yn in "yes" "no"; do
 done
 
 
-cp "$2/.github/workflows/github-ci.yml" "$1/.github/workflows/github-ci_copy.yml" 
-python3 edit_ciyaml.py $1 ${FOLDER_NAME}
+cp "$2/.github/workflows/github-ci.yml" "$2/.github/workflows/github-ci_copy.yml" 
+python3 edit_ciyaml.py $2 ${FOLDER_NAME}
 rm "$2/.github/workflows/github-ci_copy.yml" 
 
 cp -R "$2/." "$SERVICES_DIR/services/$FOLDER_NAME"
