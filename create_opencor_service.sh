@@ -56,7 +56,7 @@ select yn in "yes" "no"; do
     case $yn in
         yes )
         source "$2/.venv/bin/activate"
-        make -C $2 version-service-major --allow-dirty
+        make -C $2 version-service-major
         make -C $2 build
         make -C $2 up
         deactivate
