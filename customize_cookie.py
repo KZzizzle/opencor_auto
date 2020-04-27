@@ -188,4 +188,26 @@ with execute_fileout.open("w") as eout_file:
         if index <= lastline:
             dummyvar = eout_file.write(line)
 
+#=======================================================================
+# edit README.md
+#=======================================================================
+readme_file = Path(project_name+"/README.md")
+
+version_text = """ Two versions:
+
+- integration version (e.g. [src/opencorservice_demo/VERSION_INTEGRATION]) is updated with ``make version-integration-*``
+- service version (e.g. [src/opencorservice_demo/VERSION]) is updated with ``make version-service-*``
+"""
+
+with readme_file.open("r") as r_file:
+    rbuf = r_file.readlines()
+
+lastline = len(rbuf)
+with readme_file.open("w") as rout_file:
+    for index, line in enumerate(rbuf):
+        if line .__contains__("## Workflow"):
+            line = version_text
+            lastline = index
+        if index <= lastline:
+            dummyvar = dout_file.write(line)
 

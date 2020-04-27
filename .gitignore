@@ -6,7 +6,6 @@
 !create_cookie.py
 !run_model.py
 
-!push_opencor_service.sh
 !edit_ciyaml.py
 !.gitignore
 
