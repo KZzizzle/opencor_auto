@@ -75,4 +75,4 @@ python3 edit_ciyaml.py $2 ${FOLDER_NAME}
 rm "$2/.github/workflows/github-ci_copy.yml" 
 
 cp -R "$2/." "$SERVICES_DIR/services/$FOLDER_NAME"
-mv "$2/.github/workflows/github-ci.yml" "$SERVICES_DIR/$FOLDER_NAME"
+mv "$SERVICES_DIR/services/$FOLDER_NAME/.github/workflows/github-ci.yml" "$SERVICES_DIR/.github/workflows/$FOLDER_NAME.yml"
