@@ -103,7 +103,7 @@ input_dict={}
 for key in metadata_dict["inputs"]:    
     input_dict.update({key: metadata_dict["inputs"][key]["defaultValue"]})
 
-inputvalidation_file = Path(project_name+"/validation/input/inputs.json")
+inputvalidation_file = Path(project_name+"/validation/input/input.json")
 with inputvalidation_file.open("w") as fpin:
     json.dump(input_dict, fpin, indent=4)
 
@@ -171,7 +171,7 @@ execute_file = Path(project_name+"/service.cli/execute_copy.sh")
 execute_fileout = Path(project_name+"/service.cli/execute.sh")
 
 executetext = ("\n/home/opencor/OpenCOR-2019-06-11-Linux/bin/OpenCOR -c PythonRunScript::script /home/" 
-+ project_name + "/run_model.py ${INPUT_FOLDER}/inputs.json /home/" 
++ project_name + "/run_model.py ${INPUT_FOLDER}/input.json /home/" 
 + project_name + "/" + model_file + " /home/" + project_name + "/input_keymap.json"
 + "\n\ncp outputs.csv ${OUTPUT_FOLDER}/outputs.csv\n\nenv | grep INPUT")
 

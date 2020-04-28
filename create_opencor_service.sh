@@ -34,7 +34,7 @@ cp "$2/.tmp/output/outputs.csv" "$2/validation/output/"
 rm "$2/validation/output/outputs.json"
 rm "$2/docker/ubuntu/Dockerfile_copy"
 rm "$2/metadata/metadata_copy.yml"
-rm "$2/service.cli/execute_copy.sh "
+rm "$2/service.cli/execute_copy.sh"
 
 # run unit and integration tests
 make -C $2 tests
