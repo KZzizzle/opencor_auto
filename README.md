@@ -3,11 +3,11 @@
 Creates a "cookie" that takes OpenCOR compatible models (.cellML or .sedML) and turns them into o2S2PARC services. 
 
 ## Software Requirements
-python3
-make (pip install make)
-docker
-docker-compose
-git (for adding the newly created model into o2S2PARC repositories)
+* python3
+* make (pip install make)
+* docker
+* docker-compose
+* git (for adding the newly created model into o2S2PARC repositories)
 
 ## Code requirements
 Must have checked out osparc-services from ITISFoundation: https://github.com/ITISFoundation/osparc-services
