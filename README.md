@@ -16,7 +16,8 @@ Must have checked out osparc-services from ITISFoundation: https://github.com/IT
 All you must specify are:
 1. The path to your .cellML or .sedML file
 2. The name of your future service 
-3. run ```. create_opencor_service.sh path_to_model name_of_service```
+
+To run, in terminal: ```. create_opencor_service.sh path_to_model name_of_service```
 
 Example: 
 ```. create_opencor_service.sh /home/username/mymodel.cellml service_example```
