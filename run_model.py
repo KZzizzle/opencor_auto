@@ -7,7 +7,6 @@ from pathlib import Path
 
 
 # modelpath = "/home/zhuang/Downloads/guyton_antidiuretic_hormone_2008.cellml"
-# inputjson= "demo"
 inputjson= str(sys.argv[1])
 modelpath = str(sys.argv[2])
 mapfile = str(sys.argv[3])
@@ -94,13 +93,4 @@ try:
     print('CSV output written')
 except:
     print('Error during model run')
-
-
-# return return_code
-
-# def usage():
-# print("Usage: docker run KZzizzle/opencor-load <str> <float1> <float2> <float3>")
-# print("  where <str> is the name of the model that you want to run. It must be on the input folder."
-# " <float1> is the starting time of the simulation, <float2> is the ending time of the simulation and "
-# "<float3> is the time increment when running the simulation.")
 
