@@ -3,7 +3,7 @@ set -o pipefail
 # To use: call the script with first argument being the cellML or sedML path, second argument being the name of the project. 
 # Example: . create_opencor_service.sh /home/zhuang/Downloads/guyton_antidiuretic_hormone_2008.cellml demo
 
-open model and make sure that works
+# open model and make sure that works
 /home/opencor/OpenCOR-2019-06-11-Linux/bin/OpenCOR -c PythonRunScript::script get_num_inputs.py $1 $2
 python3 -m venv .venv
 source .venv/bin/activate
