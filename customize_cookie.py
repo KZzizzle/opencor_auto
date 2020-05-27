@@ -67,9 +67,9 @@ for key in model_inputs:
     metadata_dict["inputs"][keyname] = {
         "displayOrder": number+4,
         "label":key.split("/")[-1],
-        "description": key,
+        "description": key+', units: '+model_inputs[key][1],
         "type": "number",
-        "defaultValue": model_inputs[key]
+        "defaultValue": model_inputs[key][0]
     }
 
 metadata_dict["outputs"] = {}
@@ -103,7 +103,7 @@ input_dict={}
 for key in metadata_dict["inputs"]:    
     input_dict.update({key: metadata_dict["inputs"][key]["defaultValue"]})
 
-inputvalidation_file = Path(project_name+"/validation/input/input.json")
+inputvalidation_file = Path(project_name+"/validation/input/inputs.json")
 with inputvalidation_file.open("w") as fpin:
     json.dump(input_dict, fpin, indent=4)
 
@@ -134,9 +134,13 @@ RUN apt-get -qq update && \\
 WORKDIR /home/opencor
 
 # Taking the OpenCOR binary from the web, this binary is Python enabled.  This method fails to complete for me so enabling the alternative method.
-ADD https://github.com/dbrnz/opencor/releases/download/snapshot-2019-06-11/OpenCOR-2019-06-11-Linux.tar.gz /home/opencor/
-RUN tar -xvzf OpenCOR-2019-06-11-Linux.tar.gz && \\
-    rm OpenCOR-2019-06-11-Linux.tar.gz
+# ADD https://github.com/dbrnz/opencor/releases/download/snapshot-2019-06-11/OpenCOR-2019-06-11-Linux.tar.gz /home/opencor/
+# RUN tar -xvzf OpenCOR-2019-06-11-Linux.tar.gz && \
+#     rm OpenCOR-2019-06-11-Linux.tar.gz
+
+ADD https://opencor.ws/downloads/snapshots/2020-02-14/OpenCOR-2020-02-14-Linux.tar.gz /home/opencor/
+RUN tar -xvzf OpenCOR-2020-02-14-Linux.tar.gz && \
+    rm OpenCOR-2020-02-14-Linux.tar.gz
 
 """
 
@@ -158,9 +162,8 @@ with Docker_fileout.open("r") as d_file:
 with Docker_fileout.open("w") as dout_file:
     for line in buf:
         if line .__contains__("RUN adduser "):
-            line = line + "\nCOPY --chown=scu:scu ./src/"+ project_name + "/run_model.py /home/" + project_name + "/\n"
-            line = line + "COPY --chown=scu:scu ./src/" + project_name + "/" + model_file + " /home/" + project_name + "/\n"
-            line = line + "COPY --chown=scu:scu ./src/" + project_name + "/input_keymap.json /home/" + project_name + "/\n"
+            line = line + "\nCOPY --chown=scu:scu ./src/"+ project_name + "/ /home/" + project_name + "/\n"
+
         placeholder = dout_file.write(line)
 
 #=======================================================================
@@ -170,11 +173,16 @@ with Docker_fileout.open("w") as dout_file:
 execute_file = Path(project_name+"/service.cli/execute_copy.sh")
 execute_fileout = Path(project_name+"/service.cli/execute.sh")
 
-executetext = ("\n/home/opencor/OpenCOR-2019-06-11-Linux/bin/OpenCOR -c PythonRunScript::script /home/" 
-+ project_name + "/run_model.py ${INPUT_FOLDER}/input.json /home/" 
-+ project_name + "/" + model_file + " /home/" + project_name + "/input_keymap.json"
-+ "\n\ncp outputs.csv ${OUTPUT_FOLDER}/outputs.csv\n\nenv | grep INPUT")
+## 2019 snapshot VERSION
+# executetext = ("\n/home/opencor/OpenCOR-2020-02-14-Linux/bin/OpenCOR -c PythonRunScript::script /home/" 
+# + project_name + "/run_model.py ${INPUT_FOLDER}/input.json /home/" 
+# + project_name + "/" + model_file + " /home/" + project_name + "/input_keymap.json"
+# + "\n\ncp outputs.csv ${OUTPUT_FOLDER}/outputs.csv\n\nenv | grep INPUT")
 
+executetext = ("\n/home/opencor/OpenCOR-2020-02-14-Linux/pythonshell /home/" 
++ project_name + "/run_model_2020.py ${INPUT_FOLDER}/inputs.json /home/" 
++ project_name + "/" + model_file + " /home/" + project_name + "/input_keymap.json"
++ "\n\ncp outputs.csv ${OUTPUT_FOLDER}/outputs.csv\n\nenv | grep INPUT")  
 
 with execute_file.open("r") as e_file:
     ebuf = e_file.readlines()

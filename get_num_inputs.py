@@ -1,4 +1,5 @@
-import OpenCOR
+# import OpenCOR
+import opencor
 import sys
 import pickle
 import json
@@ -13,14 +14,14 @@ def main(modelpath, servicename):
 
     return_code = 0
     if modelpath.endswith("cellml") or modelpath.endswith("sedml"):
-        model = OpenCOR.openSimulation(modelpath)
+        model = opencor.open_simulation(modelpath)
     else:
         print('Invalid file type: only .cellml and .sedml accepted')
         return_code=3
     try: 
         print('try getting simulation')
-        c = model.data().constants()
-        s = model.data().states()
+        c = model.results().constants()
+        s = model.results().states()
         num_inputs = len(s)+len(c)
 
         if num_inputs<1:
@@ -32,10 +33,10 @@ def main(modelpath, servicename):
             
             model_inputs =c.copy()
             for entry in c:
-                model_inputs[entry]=c[entry]
+                model_inputs[entry]=[c[entry].value(), c[entry].unit()]
             s_copy =s.copy()
             for entry in s:
-                s_copy[entry]=s[entry]
+                s_copy[entry]=[s[entry].value(), s[entry].unit()]
             model_inputs.update(s_copy)    
 
             with open('model_inputs.json', 'w') as f:

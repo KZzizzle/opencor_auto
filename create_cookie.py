@@ -11,7 +11,7 @@ def main(servicename):
     cookiecutter('https://github.com/ITISFoundation/cookiecutter-osparc-service', extra_context={
         'docker_base':"ubuntu:18.04",
         'number_of_inputs': num_inputs, 
-        'affiliation': 'ITIS Foundation',
+        'author_affiliation': 'ITIS Foundation',
         'project_name': servicename,
         'author_name': "Katie Zhuang",
         'author_email': "zhuang@itis.swiss",
