@@ -9,7 +9,7 @@ read -p "What name should this folder have on the github repository [oc-guytonmo
 FOLDER_NAME=${FOLDER_NAME:-oc-guytonmodel}
 echo $FOLDER_NAME
 
-echo "About to create new version of your service! Are you sure you want this? "
+echo "About to create new version of your service! The repo must also be CLEAN! Are you sure you want this? "
 select yn in "yes" "no"; do
     case $yn in
         yes )
