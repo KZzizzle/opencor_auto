@@ -44,7 +44,7 @@ else:
 
 try: 
     print('try running simulation')
-    mdata = model.data()
+    mdata = model.results()
     mdata.set_starting_point(starttime)
     mdata.set_ending_point(endtime)
     mdata.set_point_interval(timeincr)

@@ -8,22 +8,26 @@ def main(servicename):
     file = open("num_params.txt", "r")
     num_inputs = int(file.read())+3
 
-    cookiecutter('https://github.com/ITISFoundation/cookiecutter-osparc-service', extra_context={
-        'docker_base':"ubuntu:18.04",
-        'number_of_inputs': num_inputs, 
-        'author_affiliation': 'ITIS Foundation',
-        'project_name': servicename,
-        'author_name': "Katie Zhuang",
-        'author_email': "zhuang@itis.swiss",
-        'project_type': "computational",
-        'number_of_outputs': 1,
-        'git_username': "KZzizzle"
-    })
+    try:
+        cookiecutter('https://github.com/ITISFoundation/cookiecutter-osparc-service', extra_context={
+            'docker_base':"ubuntu:18.04",
+            'number_of_inputs': num_inputs, 
+            'author_affiliation': 'ITIS Foundation',
+            'project_name': servicename,
+            'author_name': "Katie Zhuang",
+            'author_email': "zhuang@itis.swiss",
+            'project_type': "computational",
+            'number_of_outputs': 1,
+            'git_username': "KZzizzle"
+        })
 
-    copyfile(servicename + "/docker/ubuntu/Dockerfile", servicename + "/docker/ubuntu/Dockerfile_copy")
-    copyfile(servicename + "/service.cli/execute.sh", servicename + "/service.cli/execute_copy.sh")
-    copyfile(servicename + "/metadata/metadata.yml", servicename + "/metadata/metadata_copy.yml")
+        copyfile(servicename + "/docker/ubuntu/Dockerfile", servicename + "/docker/ubuntu/Dockerfile_copy")
+        copyfile(servicename + "/service.cli/execute.sh", servicename + "/service.cli/execute_copy.sh")
+        copyfile(servicename + "/metadata/metadata.yml", servicename + "/metadata/metadata_copy.yml")
 
+    except:
+        print("error in the cookiecutter construction or copying the Docker files - likely that the directory was not created")
+        return 2
     return 0
 
 def usage():

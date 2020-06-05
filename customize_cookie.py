@@ -26,35 +26,35 @@ with metadata_file.open("r") as fp:
 input_keymap = {}
 metadata_dict["inputs"] = {}
 
-input_keymap["starttime"]="starttime"
-input_keymap["endtime"]="endtime"
-input_keymap["timeincr"]="timeincr"
+input_keymap["a_starttime"]="a_starttime"
+input_keymap["a_endtime"]="a_endtime"
+input_keymap["a_timeincr"]="a_timeincr"
 
 metadata_dict["inputs"].update({
-    "starttime": {
+    "a_starttime": {
         "displayOrder": 1,
         "label": "simulation start time",
         "description": "starting time of simulation (s)",
         "type": "number",
-        "defaultValue":0
+        "defaultValue":0.0
         }
         })
 metadata_dict["inputs"].update({
-    "endtime": {
+    "a_endtime": {
         "displayOrder":2,
         "label":"simulation ending time",
         "description": "ending time of simulation (s)",
         "type": "number",
-        "defaultValue": 1000
+        "defaultValue": 1000.0
         }
         })
 metadata_dict["inputs"].update({
-    "timeincr": {
+    "a_timeincr": {
         "displayOrder":3,
         "label":"simulation time increment",
         "description": "time step for running simulation (s)",
         "type": "number",
-        "defaultValue": 1
+        "defaultValue": 1.0
         }
         })
 
@@ -62,7 +62,7 @@ metadata_dict["inputs"].update({
 for key in model_inputs:    
     # print(key)
     number = list(model_inputs.keys()).index(key)
-    keyname = "input_"+ str(number)
+    keyname = "input_"+ str(number).zfill(3)
     input_keymap[keyname] = key
     metadata_dict["inputs"][keyname] = {
         "displayOrder": number+4,
@@ -86,6 +86,7 @@ metadata_dict["outputs"].update({
             })
 
 # write to metadata file
+
 metadata_file_edited = Path(project_name+"/metadata/metadata.yml")
 with metadata_file_edited.open("w") as fp:
     yaml.safe_dump(metadata_dict, fp, default_flow_style=False)
